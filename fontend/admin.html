@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Room Booking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Exam Room Booking</h2>
+        
+        <form id="examRoomForm">
+            <div class="mb-3">
+                <label class="form-label">Room Name</label>
+                <input type="text" id="room_name" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Total Seats</label>
+                <input type="number" id="total_seats" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Exam Date</label>
+                <input type="date" id="exam_date" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Start Time</label>
+                <input type="time" id="exam_start_time" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">End Time</label>
+                <input type="time" id="exam_end_time" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Exam Room</button>
+        </form>
+        
+        <h3 class="mt-5">Exam Room List</h3>
+        <table class="table table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Room Name</th>
+                    <th>Total Seats</th>
+                    <th>Exam Date</th>
+                    <th>Exam Time</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="examRoomList"></tbody>
+        </table>
+    </div>
+
+    <!-- Update Modal -->
+    <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateModalLabel">Update Exam Room</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="update_id">
+                    <div class="mb-3">
+                        <label class="form-label">Room Name</label>
+                        <input type="text" id="update_room_name" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Total Seats</label>
+                        <input type="number" id="update_total_seats" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Exam Date</label>
+                        <input type="date" id="update_exam_date" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Start Time</label>
+                        <input type="time" id="update_exam_start_time" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">End Time</label>
+                        <input type="time" id="update_exam_end_time" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="saveUpdate()">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
