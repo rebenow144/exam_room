@@ -108,6 +108,71 @@ app.delete('/examrooms/:id', (req, res) => {
   );
 });
 
+//ผู้ใช้
+app.get('/available-examrooms', (req, res) => {
+  db.query('SELECT * FROM examroom', (err, results) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).json({ message: 'Error fetching available exam rooms', error: err.message });
+    }
+    res.json(results);
+  });
+});
+
+// ให้ผู้เข้าสอบเลือกห้องสอบ
+app.post('/select-examroom', (req, res) => {
+  const { candidate_id, selected_room_id } = req.body;
+  
+  // ตรวจสอบจำนวนที่นั่งที่เหลือก่อน
+  db.query(
+    'SELECT total_seats, (SELECT COUNT(*) FROM candidate WHERE selected_room_id = ?) as used_seats FROM examroom WHERE room_id = ?',
+    [selected_room_id, selected_room_id],
+    (err, results) => {
+      if (err) {
+        return res.status(500).json({ message: 'Error checking seats', error: err.message });
+      }
+      
+      if (results[0].used_seats >= results[0].total_seats) {
+        return res.status(400).json({ message: 'No available seats in this room' });
+      }
+      
+      // ดำเนินการต่อถ้ามีที่นั่งว่าง
+      db.query(
+        'UPDATE candidate SET selected_room_id = ? WHERE id = ?',
+        [selected_room_id, candidate_id],
+        (err, result) => {
+          if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Error selecting exam room', error: err.message });
+          }
+          if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Candidate not found' });
+          }
+          res.json({ message: 'Exam room selected successfully' });
+        }
+      );
+    }
+  );
+});
+
+// ดึงข้อมูลห้องสอบที่ผู้เข้าสอบเลือกไว้
+app.get('/candidate/:id/examroom', (req, res) => {
+  db.query(
+    'SELECT examroom.* FROM examroom JOIN candidate ON examroom.room_id = candidate.selected_room_id WHERE candidate.id = ?'
+    [req.params.id],
+    (err, results) => {
+      if (err) {
+        console.error('Database error:', err);
+        return res.status(500).json({ message: 'Error fetching selected exam room', error: err.message });
+      }
+      if (results.length === 0) {
+        return res.status(404).json({ message: 'No exam room selected' });
+      }
+      res.json(results[0]);
+    }
+  );
+});
+
 const PORT = 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
