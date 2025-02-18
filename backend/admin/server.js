@@ -35,7 +35,7 @@ db.connect((err) => {
 app.post('/admin/login', (req, res) => {
   const { username, password } = req.body;
   
-  console.log('Login attempt:', { username, password }); // เพิ่มบรรทัดนี้
+  console.log('Login attempt:', { username, password }); // เพิ่มบรรทัดนี้ก
   
   db.query(
     'SELECT admin_id, first_name, last_name FROM admin WHERE username = ? AND password = ?',

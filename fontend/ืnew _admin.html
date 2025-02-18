@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบจัดการห้องสอบ</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <!-- Login Form -->
+        <div id="loginForm" class="card mb-4">
+            <div class="card-header">
+                <h4>เข้าสู่ระบบสำหรับผู้ดูแล</h4>
+            </div>
+            <div class="card-body">
+                <form id="adminLoginForm">
+                    <div class="mb-3">
+                        <label class="form-label">ชื่อผู้ใช้</label>
+                        <input type="text" class="form-control" id="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">รหัสผ่าน</label>
+                        <input type="password" class="form-control" id="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">เข้าสู่ระบบ</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Main Content (Hidden until login) -->
+        <div id="mainContent" style="display: none;">
+            <!-- Add Exam Room Form -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>เพิ่มห้องสอบใหม่</h4>
+                </div>
+                <div class="card-body">
+                    <form id="addExamRoomForm">
+                        <div class="mb-3">
+                            <label class="form-label">ชื่อห้องสอบ</label>
+                            <input type="text" class="form-control" id="roomName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">จำนวนที่นั่ง</label>
+                            <input type="number" class="form-control" id="totalSeats" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">วันที่สอบ</label>
+                            <input type="date" class="form-control" id="examDate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">เวลาสอบ</label>
+                            <input type="text" class="form-control" id="examTime" placeholder="เช่น 09:00" required>
+                        </div>
+                        <button type="submit" class="btn btn-success">เพิ่มห้องสอบ</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Exam Rooms List -->
+            <div class="card">
+                <div class="card-header">
+                    <h4>รายการห้องสอบ</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ชื่อห้อง</th>
+                                    <th>จำนวนที่นั่ง</th>
+                                    <th>ที่นั่งจอง</th>
+                                    <th>วันที่สอบ</th>
+                                    <th>เวลาสอบ</th>
+                                    <th>การจัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="examRoomsList"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Modal -->
+        <div class="modal fade" id="editModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">แก้ไขข้อมูลห้องสอบ</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editExamRoomForm">
+                            <input type="hidden" id="editRoomId">
+                            <div class="mb-3">
+                                <label class="form-label">ชื่อห้องสอบ</label>
+                                <input type="text" class="form-control" id="editRoomName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">จำนวนที่นั่ง</label>
+                                <input type="number" class="form-control" id="editTotalSeats" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">วันที่สอบ</label>
+                                <input type="date" class="form-control" id="editExamDate" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">เวลาสอบ</label>
+                                <input type="text" class="form-control" id="editExamTime" required>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+                        <button type="button" class="btn btn-primary" id="saveEdit">บันทึก</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_URL = 'http://localhost:5000';
+        let editModal;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            editModal = new bootstrap.Modal(document.getElementById('editModal'));
+
+            // Login Form Handler
+            document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+
+                try {
+                    const response = await fetch(`${API_URL}/admin/login`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, password })
+                    });
+
+                    if (response.ok) {
+                        document.getElementById('loginForm').style.display = 'none';
+                        document.getElementById('mainContent').style.display = 'block';
+                        loadExamRooms();
+                    } else {
+                        alert('เข้าสู่ระบบไม่สำเร็จ');
+                    }
+                } catch (error) {
+                    alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
+                }
+            });
+
+            // Add Exam Room Form Handler
+            document.getElementById('addExamRoomForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const roomData = {
+                    room_name: document.getElementById('roomName').value,
+                    total_seats: document.getElementById('totalSeats').value,
+                    exam_date: document.getElementById('examDate').value,
+                    exam_time: document.getElementById('examTime').value
+                };
+
+                try {
+                    const response = await fetch(`${API_URL}/examrooms`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(roomData)
+                    });
+
+                    if (response.ok) {
+                        alert('เพิ่มห้องสอบสำเร็จ');
+                        document.getElementById('addExamRoomForm').reset();
+                        loadExamRooms();
+                    } else {
+                        alert('เกิดข้อผิดพลาดในการเพิ่มห้องสอบ');
+                    }
+                } catch (error) {
+                    alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
+                }
+            });
+
+            // Save Edit Handler
+            document.getElementById('saveEdit').addEventListener('click', async () => {
+                const roomId = document.getElementById('editRoomId').value;
+                const roomData = {
+                    room_name: document.getElementById('editRoomName').value,
+                    total_seats: document.getElementById('editTotalSeats').value,
+                    exam_date: document.getElementById('editExamDate').value,
+                    exam_time: document.getElementById('editExamTime').value
+                };
+
+                try {
+                    const response = await fetch(`${API_URL}/examrooms/${roomId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(roomData)
+                    });
+
+                    if (response.ok) {
+                        alert('อัพเดทข้อมูลสำเร็จ');
+                        editModal.hide();
+                        loadExamRooms();
+                    } else {
+                        alert('เกิดข้อผิดพลาดในการอัพเดทข้อมูล');
+                    }
+                } catch (error) {
+                    alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
+                }
+            });
+        });
+
+        // Load Exam Rooms
+        async function loadExamRooms() {
+            try {
+                const response = await fetch(`${API_URL}/examrooms`);
+                const rooms = await response.json();
+                const tbody = document.getElementById('examRoomsList');
+                tbody.innerHTML = '';
+
+                rooms.forEach(room => {
+                    const row = `
+                        <tr>
+                            <td>${room.room_name}</td>
+                            <td>${room.total_seats}</td>
+                            <td>${room.booked_seats || 0}</td>
+                            <td>${formatDate(room.exam_date)}</td>
+                            <td>${room.exam_time}</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary" onclick="editRoom(${room.room_id})">แก้ไข</button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteRoom(${room.room_id})">ลบ</button>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+            } catch (error) {
+                alert('เกิดข้อผิดพลาดในการโหลดข้อมูล');
+            }
+        }
+
+        // Edit Room
+        async function editRoom(roomId) {
+            try {
+                const response = await fetch(`${API_URL}/examrooms`);
+                const rooms = await response.json();
+                const room = rooms.find(r => r.room_id === roomId);
+
+                document.getElementById('editRoomId').value = roomId;
+                document.getElementById('editRoomName').value = room.room_name;
+                document.getElementById('editTotalSeats').value = room.total_seats;
+                document.getElementById('editExamDate').value = formatDateForInput(room.exam_date);
+                document.getElementById('editExamTime').value = room.exam_time;
+
+                editModal.show();
+            } catch (error) {
+                alert('เกิดข้อผิดพลาดในการโหลดข้อมูล');
+            }
+        }
+
+        // Delete Room
+        async function deleteRoom(roomId) {
+            if (confirm('คุณแน่ใจหรือไม่ที่จะลบห้องสอบนี้?')) {
+                try {
+                    const response = await fetch(`${API_URL}/examrooms/${roomId}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (response.ok) {
+                        alert('ลบห้องสอบสำเร็จ');
+                        loadExamRooms();
+                    } else {
+                        alert('เกิดข้อผิดพลาดในการลบห้องสอบ');
+                    }
+                } catch (error) {
+                    alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
+                }
+            }
+        }
+
+        // Utility Functions
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('th-TH');
+        }
+
+        function formatDateForInput(dateString) {
+            const date = new Date(dateString);
+            return date.toISOString().split('T')[0];
+        }
+    </script>
+</body>
+</html>

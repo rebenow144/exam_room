@@ -22,7 +22,7 @@ db.connect((err) => {
   console.log('Connected to database');
 });
 
-// ดึงรายการห้องสอบที่ว่าง
+// ดึงรายการห้องสอบที่ว่าง ผ่านแล้ว
 app.get('/available-examrooms', (req, res) => {
   db.query(
     `SELECT er.*, 
@@ -42,7 +42,7 @@ app.get('/available-examrooms', (req, res) => {
   );
 });
 
-// สมัครสอบและจองที่นั่ง
+// ในส่วนของการลงทะเบียน ผ่านแล้ว
 app.post('/register', (req, res) => {
   const { 
     first_name, 
@@ -53,6 +53,14 @@ app.post('/register', (req, res) => {
     selected_room_id,
     seat_number 
   } = req.body;
+
+  // แปลง seat_number เป็น integer
+  const seatNum = parseInt(seat_number);
+
+  // เพิ่มการตรวจสอบค่า seat_number
+  if (isNaN(seatNum) || seatNum <= 0) {
+    return res.status(400).json({ message: 'Invalid seat number' });
+  }
 
   // ตรวจสอบที่นั่งว่าง
   db.query(
@@ -72,6 +80,14 @@ app.post('/register', (req, res) => {
       }
 
       const { total_seats, booked_seats } = results[0];
+
+      // เพิ่มการตรวจสอบว่าเลขที่นั่งไม่เกินจำนวนที่นั่งทั้งหมด
+      if (seatNum > total_seats) {
+        return res.status(400).json({ 
+          message: `Invalid seat number. This room has only ${total_seats} seats.` 
+        });
+      }
+
       if (booked_seats >= total_seats) {
         return res.status(400).json({ message: 'No available seats in this room' });
       }
@@ -79,7 +95,7 @@ app.post('/register', (req, res) => {
       // ตรวจสอบเลขที่นั่งซ้ำ
       db.query(
         'SELECT * FROM candidate WHERE selected_room_id = ? AND seat_number = ?',
-        [selected_room_id, seat_number],
+        [selected_room_id, seatNum],
         (err, seatResults) => {
           if (err) {
             return res.status(500).json({ message: 'Error checking seat number', error: err.message });
@@ -94,7 +110,7 @@ app.post('/register', (req, res) => {
             `INSERT INTO candidate 
              (first_name, last_name, university, email, phone, selected_room_id, seat_number) 
              VALUES (?, ?, ?, ?, ?, ?, ?)`,
-            [first_name, last_name, university, email, phone, selected_room_id, seat_number],
+            [first_name, last_name, university, email, phone, selected_room_id, seatNum],
             (err, result) => {
               if (err) {
                 return res.status(500).json({ message: 'Error registering candidate', error: err.message });
