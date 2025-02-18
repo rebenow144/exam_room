@@ -1,0 +1,73 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Sarabun', sans-serif;
+}
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+.card-header {
+    background-color: #fff;
+    border-bottom: 2px solid #f0f0f0;
+    border-radius: 15px 15px 0 0 !important;
+    padding: 1.5rem;
+}
+.btn-primary {
+    background-color: #4f46e5;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+}
+.btn-primary:hover {
+    background-color: #4338ca;
+}
+.btn-success {
+    background-color: #059669;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+}
+.btn-success:hover {
+    background-color: #047857;
+}
+.btn-danger {
+    background-color: #dc2626;
+    border: none;
+}
+.btn-danger:hover {
+    background-color: #b91c1c;
+}
+.form-control {
+    border-radius: 8px;
+    padding: 0.75rem;
+    border: 2px solid #e5e7eb;
+}
+.form-control:focus {
+    border-color: #4f46e5;
+    box-shadow: none;
+}
+.table {
+    border-radius: 8px;
+}
+.table thead th {
+    background-color: #f8fafc;
+    border-bottom: 2px solid #e5e7eb;
+    padding: 1rem;
+}
+.table tbody td {
+    padding: 1rem;
+    vertical-align: middle;
+}
+.modal-content {
+    border-radius: 15px;
+    border: none;
+}
+.modal-header {
+    border-bottom: 2px solid #f0f0f0;
+    padding: 1.5rem;
+}
+.modal-footer {
+    border-top: 2px solid #f0f0f0;
+    padding: 1.5rem;
+}

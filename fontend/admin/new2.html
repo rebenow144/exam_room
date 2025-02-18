@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบจัดการห้องสอบ</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="new2.css">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-school me-2"></i>
+                ระบบจัดการห้องสอบ
+            </a>
+        </div>
+    </nav>
+
+    
+
+    <div class="container">
+        <!-- Login Form -->
+        <div id="loginForm" class="row justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4 class="mb-0">
+                            <i class="fas fa-sign-in-alt me-2"></i>
+                            เข้าสู่ระบบสำหรับผู้ดูแล
+                        </h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <form id="adminLoginForm">
+                            <div class="mb-4">
+                                <label class="form-label">ชื่อผู้ใช้</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    <input type="text" class="form-control" id="username" required>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">รหัสผ่าน</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                    <input type="password" class="form-control" id="password" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-sign-in-alt me-2"></i>
+                                เข้าสู่ระบบ
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+        <!-- Main Content -->
+        <div id="mainContent" style="display: none;">
+            <div class="row">
+                <!-- Add Exam Room Form -->
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4 class="mb-0">
+                                <i class="fas fa-plus-circle me-2"></i>
+                                เพิ่มห้องสอบใหม่
+                            </h4>
+                        </div>
+                        <div class="card-body p-4">
+                            <form id="addExamRoomForm">
+                                <div class="mb-3">
+                                    <label class="form-label">ชื่อห้องสอบ</label>
+                                    <input type="text" class="form-control" id="roomName" placeholder="เช่น st201" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">จำนวนที่นั่ง</label>
+                                    <input type="number" class="form-control" id="totalSeats" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">วันที่สอบ</label>
+                                    <input type="date" class="form-control" id="examDate" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">เวลาสอบ</label>
+                                    <input type="text" class="form-control" id="examTime" placeholder="เช่น 09:00-13:00" required>
+                                </div>
+                                <button type="submit" class="btn btn-success w-100">
+                                    <i class="fas fa-plus-circle me-2"></i>
+                                    เพิ่มห้องสอบ
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exam Rooms List -->
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="mb-0">
+                                <i class="fas fa-list me-2"></i>
+                                รายการห้องสอบ
+                            </h4>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>ชื่อห้อง</th>
+                                            <th>จำนวนที่นั่ง</th>
+                                            <th>ที่นั่งจอง</th>
+                                            <th>วันที่สอบ</th>
+                                            <th>เวลาสอบ</th>
+                                            <th>การจัดการ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="examRoomsList"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Modal -->
+        <div class="modal fade" id="editModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="fas fa-edit me-2"></i>
+                            แก้ไขข้อมูลห้องสอบ
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <form id="editExamRoomForm">
+                            <input type="hidden" id="editRoomId">
+                            <div class="mb-3">
+                                <label class="form-label">ชื่อห้องสอบ</label>
+                                <input type="text" class="form-control" id="editRoomName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">จำนวนที่นั่ง</label>
+                                <input type="number" class="form-control" id="editTotalSeats" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">วันที่สอบ</label>
+                                <input type="date" class="form-control" id="editExamDate" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">เวลาสอบ</label>
+                                <input type="text" class="form-control" id="editExamTime" required>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-2"></i>
+                            ยกเลิก
+                        </button>
+                        <button type="button" class="btn btn-primary" id="saveEdit">
+                            <i class="fas fa-save me-2"></i>
+                            บันทึก
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="candidateModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-users me-2"></i>
+                        รายชื่อผู้สอบ
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ชื่อ-นามสกุล</th>
+                                    <th>มหาวิทยาลัย</th>
+                                    <th>อีเมล</th>
+                                    <th>เบอร์โทร</th>
+                                    <th>เลขที่นั่ง</th>
+                                </tr>
+                            </thead>
+                            <tbody id="candidateList"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>
+                        ปิด
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="new2.js">
+
+    </script>
+</body>
+</html>
