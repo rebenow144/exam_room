@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เลือกประเภทผู้ใช้งาน</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-school me-2"></i>
+                ระบบจัดการห้องสอบ
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container main-content">
+        <h1 class="role-title">เลือกประเภทผู้ใช้งาน</h1>
+        
+        <div class="row g-4">
+            <!-- User Card -->
+            <div class="col-md-6">
+                <div class="role-card">
+                    <div class="role-image">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                    </div>
+                    <div class="role-content">
+                        <div>
+                            <h2 class="role-name">ผู้ใช้งานทั่วไป</h2>
+                            <p class="role-description">สำหรับนักศึกษาหรือผู้ที่ต้องการจองห้องสอบ</p>
+                        </div>
+                        <a href="/fontend/user/user.html" class="role-button">เข้าสู่ระบบผู้ใช้</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Card -->
+            <div class="col-md-6">
+                <div class="role-card">
+                    <div class="role-image">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                    </div>
+                    <div class="role-content">
+                        <div>
+                            <h2 class="role-name">ผู้ดูแลระบบ</h2>
+                            <p class="role-description">สำหรับเจ้าหน้าที่ดูแลระบบและจัดการการจองห้องสอบ</p>
+                        </div>
+                        <a href="/fontend/admin/admin.html" class="role-button">เข้าสู่ระบบผู้ดูแล</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+:root {
+    --primary-blue: #1a73e8;
+    --hover-blue: #1557b0;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f6f9fd 0%, #e9f1fb 100%);
+    font-family: 'Sarabun', sans-serif;
+}
+
+.navbar {
+    background-color: var(--primary-blue);
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.main-content {
+    padding: 2rem 0;
+}
+
+.role-title {
+    color: #2d3748;
+    font-size: 2rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.role-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.role-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+}
+
+.role-image {
+    width: 100%;
+    height: 200px;
+    background-color: #f8fafc;
+    border-radius: 16px 16px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.role-image svg {
+    width: 80px;
+    height: 80px;
+    color: var(--primary-blue);
+}
+
+.role-content {
+    padding: 1.5rem;
+    text-align: center;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.role-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 1rem;
+}
+
+.role-description {
+    color: #4a5568;
+    margin-bottom: 1.5rem;
+}
+
+.role-button {
+    background-color: var(--primary-blue);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+}
+
+.role-button:hover {
+    background-color: var(--hover-blue);
+    color: white;
+}
+
+/* ------------------------------------- */
+

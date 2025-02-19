@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบจองห้องสอบ</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="user.css">
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-school me-2"></i>
+                ระบบจัดการห้องสอบ
+            </a>
+        </div>
+    </nav>
+    
+    <div class="container mt-5">
+        <!-- ส่วนค้นหาการจอง -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2" viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    ตรวจสอบการจอง
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3 align-items-center">
+                    <div class="col-auto">
+                        <label for="searchPhone" class="col-form-label">เบอร์โทรศัพท์</label>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="tel" id="searchPhone" class="form-control" placeholder="กรอกเบอร์โทรศัพท์">
+                    </div>
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-primary" onclick="checkBooking()">
+                            ค้นหา
+                        </button>
+                    </div>
+                </div>
+                <div id="bookingResult" class="mt-4" style="display: none;">
+                    <div class="alert alert-info">
+                        <h6 class="alert-heading fw-bold mb-2">ข้อมูลการจอง</h6>
+                        <div id="bookingDetails"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ฟอร์มจองห้องสอบ -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2" viewBox="0 0 24 24">
+                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                        <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                        <path d="M9 12h6m-6 4h6"/>
+                    </svg>
+                    แบบฟอร์มจองห้องสอบ
+                </h5>
+            </div>
+            <div class="card-body">
+                <form id="bookingForm" class="needs-validation" novalidate>
+                    <div class="row mb-4">
+                        <div class="col-md-2">
+                            <label for="title" class="form-label">คำนำหน้า<span class="text-danger">*</span></label>
+                            <select class="form-select" id="title" required>
+                                <option value="">เลือกคำนำหน้า</option>
+                                <option value="นาย">นาย</option>
+                                <option value="นาง">นาง</option>
+                                <option value="นางสาว">นางสาว</option>
+                            </select>
+                            <div class="invalid-feedback">กรุณาเลือกคำนำหน้า</div>
+                        </div>
+                        <div class="col-md-5">
+                            <label for="firstName" class="form-label">ชื่อ<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="firstName" required>
+                            <div class="invalid-feedback">กรุณากรอกชื่อ</div>
+                        </div>
+                        <div class="col-md-5">
+                            <label for="lastName" class="form-label">นามสกุล<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="lastName" required>
+                            <div class="invalid-feedback">กรุณากรอกนามสกุล</div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="university" class="form-label">มหาวิทยาลัย<span class="text-danger">*</span></label>
+                        <select class="form-select" id="university" required>
+                            <option value="">-- กรุณาเลือกมหาวิทยาลัย --</option>
+                            <option value="PSU">มหาวิทยาลัยสงขลานครินทร์</option>
+                            <option value="WU">มหาวิทยาลัยวลัยลักษณ์</option>
+                            <option value="RMUTSV">มหาวิทยาลัยเทคโนโลยีราชมงคลศรีวิชัย</option>
+                            <option value="SRU">มหาวิทยาลัยราชภัฏสุราษฎร์ธานี</option>
+                        </select>
+                        <div class="invalid-feedback">กรุณาเลือกมหาวิทยาลัย</div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">อีเมล<span class="text-danger">*</span></label>
+                            <input type="email" class="form-control" id="email" required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+                            <div class="invalid-feedback">กรุณากรอกอีเมลให้ถูกต้อง</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="phone" class="form-label">เบอร์โทรศัพท์<span class="text-danger">*</span></label>
+                            <input type="tel" class="form-control" id="phone" required pattern="[0-9]{10}">
+                            <div class="invalid-feedback">กรุณากรอกเบอร์โทรศัพท์ 10 หลัก</div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="roomSelect" class="form-label">เลือกห้องสอบ<span class="text-danger">*</span></label>
+                            <select class="form-select" id="roomSelect" required>
+                                <option value="">กรุณาเลือกห้องสอบ</option>
+                            </select>
+                            <div class="invalid-feedback">กรุณาเลือกห้องสอบ</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="seatSelect" class="form-label">เลือกที่นั่ง<span class="text-danger">*</span></label>
+                            <select class="form-select" id="seatSelect" required disabled>
+                                <option value="">กรุณาเลือกที่นั่ง</option>
+                            </select>
+                            <div class="invalid-feedback">กรุณาเลือกที่นั่ง</div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning" id="formErrors" style="display: none;">
+                        กรุณากรอกข้อมูลให้ครบถ้วนในช่องที่มีเครื่องหมาย *
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2" viewBox="0 0 24 24">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                                <polyline points="17 21 17 13 7 13 7 21"/>
+                                <polyline points="7 3 7 8 15 8"/>
+                            </svg>
+                            ยืนยันการจอง
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal สำหรับแสดงผลการจอง -->
+    <div class="modal fade" id="resultModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">ผลการจอง</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="user.js"></script>
+</body>
+</html>

@@ -2,6 +2,18 @@ body {
     background-color: #f8f9fa;
     font-family: 'Sarabun', sans-serif;
 }
+
+.navbar {
+    background-color: var(--primary-blue);
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
 .card {
     border: none;
     border-radius: 15px;

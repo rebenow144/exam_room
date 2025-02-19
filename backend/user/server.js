@@ -25,22 +25,44 @@ db.connect((err) => {
 // ดึงรายการห้องสอบที่ว่าง ผ่านแล้ว
 app.get('/available-examrooms', (req, res) => {
   db.query(
-    `SELECT er.*, 
-     COUNT(c.candidate_id) as booked_seats,
-     (er.total_seats - COUNT(c.candidate_id)) as available_seats
+    `SELECT er.room_id, er.room_name, er.total_seats, 
+            GROUP_CONCAT(c.seat_number) AS booked_seats
      FROM examroom er 
      LEFT JOIN candidate c ON er.room_id = c.selected_room_id 
-     GROUP BY er.room_id 
-     HAVING available_seats > 0`,
+     GROUP BY er.room_id`,
     (err, results) => {
       if (err) {
         console.error('Database error:', err);
         return res.status(500).json({ message: 'Error fetching available exam rooms', error: err.message });
       }
-      res.json(results);
+
+      // แปลงข้อมูลให้คืนที่นั่งที่ยังว่าง
+      const formattedResults = results.map(room => {
+        const totalSeats = room.total_seats;
+        const bookedSeats = room.booked_seats ? room.booked_seats.split(',').map(Number) : [];
+
+        // หาที่นั่งที่ยังว่าง
+        const availableSeats = [];
+        for (let i = 1; i <= totalSeats; i++) {
+          if (!bookedSeats.includes(i)) {
+            availableSeats.push(i);
+          }
+        }
+
+        return {
+          room_id: room.room_id,
+          room_name: room.room_name,
+          total_seats: totalSeats,
+          available_seats_count: availableSeats.length,
+          available_seats: availableSeats, // เพิ่มข้อมูลที่นั่งว่าง
+        };
+      });
+
+      res.json(formattedResults);
     }
   );
 });
+
 
 // ในส่วนของการลงทะเบียน ผ่านแล้ว
 app.post('/register', (req, res) => {
@@ -160,6 +182,26 @@ app.delete('/candidates/:candidateId', (req, res) => {
         return res.status(404).json({ message: 'Candidate not found' });
       }
       res.json({ message: 'Registration canceled successfully' });
+    }
+  );
+});
+
+// เพิ่ม endpoint สำหรับค้นหาการจองด้วยเบอร์โทรศัพท์
+app.get('/check-booking/:phone', (req, res) => {
+  db.query(
+    `SELECT c.*, er.room_name, er.exam_date, er.exam_time 
+     FROM candidate c 
+     JOIN examroom er ON c.selected_room_id = er.room_id 
+     WHERE c.phone = ?`,
+    [req.params.phone],
+    (err, results) => {
+      if (err) {
+        return res.status(500).json({ message: 'Error checking booking', error: err.message });
+      }
+      if (results.length === 0) {
+        return res.status(404).json({ message: 'ไม่พบข้อมูลการจอง' });
+      }
+      res.json(results[0]);
     }
   );
 });
