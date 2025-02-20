@@ -2,6 +2,7 @@ const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
 const app = express();
+const fs = require('fs');
 
 // Middleware
 app.use(cors());
@@ -9,11 +10,15 @@ app.use(express.json());
 
 // Database connection
 const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '1980',
+  host: 'gateway01.us-west-2.prod.aws.tidbcloud.com',
+  user: '2SFr66t913atmzV.root',
+  password: 'CnxAk3t7YePPLoaz',
   database: 'exam_booking_system',
-  port: 3307
+  port: 4000,
+  ssl: {
+    ca: fs.readFileSync('../backend/isrgrootx1.pem')
+  }
+
 });
 
 // เพิ่ม error handling ที่ละเอียดขึ้น

@@ -113,10 +113,10 @@ async function loadExamRooms() {
                             <i class="fas fa-users"></i> ดูรายชื่อ
                         </button>
                         <button class="btn btn-sm btn-primary me-2" onclick="editRoom(${room.room_id})">
-                            <i class="fas fa-edit"></i> แก้ไข
+                            <i class="fas fa-edit"></i> 
                         </button>
                         <button class="btn btn-sm btn-danger" onclick="deleteRoom(${room.room_id})">
-                            <i class="fas fa-trash"></i> ลบ
+                            <i class="fas fa-trash"></i> 
                         </button>
                     </td>
                 </tr>
