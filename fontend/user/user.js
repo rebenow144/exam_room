@@ -84,7 +84,7 @@ window.addEventListener('load', async () => {
             if (room.available_seats_count > 0) {
                 const option = document.createElement('option');
                 option.value = room.room_id;
-                option.textContent = `${room.room_name} (ที่นั่งว่าง: ${room.available_seats_count})`;
+                option.textContent = `${room.room_name} (ที่นั่งว่าง: ${room.available_seats_count}) - ${room.exam_date} เวลา ${room.exam_time}`;
                 roomSelect.appendChild(option);
             }
         });
@@ -92,6 +92,7 @@ window.addEventListener('load', async () => {
         console.error('Error loading exam rooms:', error);
     }
 });
+
 
 // อัพเดตที่นั่ง
 document.getElementById('roomSelect').addEventListener('change', function() {
